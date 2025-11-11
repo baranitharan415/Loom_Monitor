@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loom Monitor</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+  }
+</style>
+</head>
+<body class="bg-gray-900 text-white font-display">
+
+<main class="p-6 space-y-6">
+ <!-- Header -->
+<div class="bg-gray-800 rounded-xl p-6 shadow-sm">
+  <div class="flex items-center justify-between mb-2">
+    <h1 class="text-2xl font-bold">Loom-A102</h1>
+    <div id="status" class="flex h-8 items-center justify-center gap-x-2 rounded-full bg-green-600/30 px-4">
+      <span class="material-symbols-outlined text-green-500">check_circle</span>
+      <p class="text-sm font-semibold text-green-400">Running</p>
+    </div>
+  </div>
+  <p id="lastUpdated" class="text-sm text-gray-400">Last updated: --</p>
+</div>
+
+
+  <!-- Efficiency Gauge -->
+  <div class="bg-gray-800 rounded-xl p-6 flex flex-col items-center">
+    <p class="text-lg mb-4">Efficiency</p>
+    <div class="relative w-48 h-48">
+      <svg class="w-full h-full" viewBox="0 0 36 36">
+        <path class="text-gray-700" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              fill="none" stroke="currentColor" stroke-dasharray="100,100" stroke-width="3"></path>
+        <path id="effArc" class="text-blue-500"
+              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3"></path>
+      </svg>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <span id="efficiency" class="text-4xl font-extrabold text-blue-400">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Picks and Stops -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Picks -->
+    <div class="bg-gray-800 rounded-xl p-6 flex items-center gap-4">
+      <div class="flex items-center justify-center size-14 rounded-lg bg-blue-600/20 text-blue-400">
+        <span class="material-symbols-outlined" style="font-size: 36px;">precision_manufacturing</span>
+      </div>
+      <div>
+        <p class="text-base text-gray-400 font-medium">Total Picks</p>
+        <p id="picks" class="text-4xl font-extrabold text-blue-400 leading-tight">0</p>
+      </div>
+    </div>
+
+    <!-- Stops -->
+    <div class="bg-gray-800 rounded-xl p-6">
+      <div class="flex items-center gap-4 mb-6">
+        <div class="flex items-center justify-center size-14 rounded-lg bg-red-600/20 text-red-400">
+          <span class="material-symbols-outlined" style="font-size: 36px;">error</span>
+        </div>
+        <div>
+          <p class="text-base text-gray-400 font-medium">Stop Counts</p>
+          <p id="totalStops" class="text-3xl font-bold text-red-400">0</p>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-red-400">construction</span>
+            <span>Warp</span>
+          </div>
+          <span id="warp" class="font-bold text-lg">0</span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-yellow-400">format_color_fill</span>
+            <span>Fill</span>
+          </div>
+          <span id="fill" class="font-bold text-lg">0</span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-purple-400">build_circle</span>
+            <span>Others</span>
+          </div>
+          <span id="others" class="font-bold text-lg">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time Metrics -->
+  <div class="bg-gray-800 rounded-xl p-6">
+    <div class="flex items-center gap-4 mb-4">
+      <div class="flex items-center justify-center size-12 rounded-lg bg-yellow-600/20 text-yellow-400">
+        <span class="material-symbols-outlined" style="font-size: 32px;">schedule</span>
+      </div>
+      <p class="text-lg font-semibold">Time Metrics</p>
+    </div>
+    <div class="space-y-4">
+      <div>
+        <div class="flex justify-between mb-1">
+          <p>Run Time</p>
+          <p id="runTimeText">0h 0m</p>
+        </div>
+        <div class="w-full bg-gray-700 rounded-full h-2.5">
+          <div id="runBar" class="bg-blue-500 h-2.5 rounded-full" style="width: 0%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1">
+          <p>Total Shift Time</p>
+          <p id="shiftTimeText">0h 0m</p>
+        </div>
+        <div class="w-full bg-gray-700 rounded-full h-2.5">
+          <div class="bg-blue-400 h-2.5 rounded-full" style="width: 100%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+async function fetchData() {
+  const url = "https://api.thingspeak.com/channels/3155741/feeds.json?api_key=C0QJ8VEOS7SKJECK&results=1";
+  const res = await fetch(url);
+  const data = await res.json();
+  const feed = data.feeds[data.feeds.length - 1];
+
+  const eff = parseFloat(feed.field7).toFixed(2);
+  const picks = feed.field1;
+  const warp = feed.field2;
+  const fill = feed.field3;
+  const others = feed.field4;
+  const shift = parseInt(feed.field5);
+  const run = parseInt(feed.field6);
+
+  // Efficiency
+  document.getElementById("efficiency").textContent = eff + "%";
+  document.getElementById("effArc").setAttribute("stroke-dasharray", `${eff},100`);
+
+  // Picks and Stops
+  document.getElementById("picks").textContent = picks;
+  document.getElementById("warp").textContent = warp;
+  document.getElementById("fill").textContent = fill;
+  document.getElementById("others").textContent = others;
+  document.getElementById("totalStops").textContent = parseInt(warp) + parseInt(fill) + parseInt(others);
+
+  // Time (convert seconds → h:m)
+  function formatTime(sec) {
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    return `${h}h ${m}m`;
+  }
+  // Last updated time
+const updatedAt = new Date(feed.created_at);
+document.getElementById("lastUpdated").textContent =
+  "Last updated: " + updatedAt.toLocaleString();
+
+  document.getElementById("runTimeText").textContent = formatTime(run);
+  document.getElementById("shiftTimeText").textContent = formatTime(shift);
+
+  const percent = (run / shift) * 100;
+  document.getElementById("runBar").style.width = percent.toFixed(1) + "%";
+}
+
+fetchData();
+setInterval(fetchData, 30000);
+</script>
+</body>
+</html>
