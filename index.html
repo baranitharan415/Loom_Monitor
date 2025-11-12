@@ -138,7 +138,7 @@ async function fetchData() {
   const data = await res.json();
   const feed = data.feeds[data.feeds.length - 1];
 
-  const eff = parseFloat(feed.field7).toFixed(2);
+  // const eff = parseFloat(feed.field7).toFixed(2);
   const picks = feed.field1;
   const warp = feed.field2;
   const fill = feed.field3;
@@ -147,6 +147,7 @@ async function fetchData() {
   const run = parseInt(feed.field6);
 
   // Efficiency
+  let eff = ((run/shift)*100).toFixed(2);
   document.getElementById("efficiency").textContent = eff + "%";
   document.getElementById("effArc").setAttribute("stroke-dasharray", `${eff},100`);
 
@@ -180,3 +181,4 @@ setInterval(fetchData, 30000);
 </script>
 </body>
 </html>
+
